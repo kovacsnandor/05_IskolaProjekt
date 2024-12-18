@@ -1,4 +1,5 @@
 # Alapfogalmak
+
 ## Feature Teszt
 Feature teszt alatt azt értjük, hogy **az alkalmazásunk egy adott funkcióját**, vagyis egy feature-jét egészében teszteljük. Ez azt jelenti, hogy nem csak egyetlen osztály vagy függvény működését vizsgáljuk, hanem azt, hogy az adott funkció hogyan viselkedik, amikor az alkalmazás többi részével együttműködik.
 
