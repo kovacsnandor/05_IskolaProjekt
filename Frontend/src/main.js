@@ -12,11 +12,7 @@ import "bootstrap"
 //Icons: css
 import "bootstrap-icons/font/bootstrap-icons.min.css"
 
-import Modal from './components/Modal.vue'
-
 const app = createApp(App)
-
-app.component("Modal",Modal);
 
 app.use(createPinia())
 app.use(router)

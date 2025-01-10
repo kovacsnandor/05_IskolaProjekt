@@ -4,17 +4,21 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use Illuminate\Container\Attributes\DB as AttributesDB;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 // use PHPUnit\Framework\TestCase;
 use Tests\TestCase;
 
+use function PHPUnit\Framework\assertEquals;
+
 class UserTest extends TestCase
 {
 
     
-    //A tesztek előtt itt lehet lé
+
+    //A tesztek előtt itt lehet létrehozni a teszt adatbázist
     public function setUp(): void
     {
         parent::setUp();
@@ -23,8 +27,11 @@ class UserTest extends TestCase
         // $this->artisan('migrate');
     }
 
-    //kiürít minden táblát
+    //kiürít minden táblát minden teszt előtt
     //use RefreshDatabase;
+
+    //Taranzakcióz minden tesztet és azt visszavonja
+    //use DatabaseTransactions;
 
 
     /**
@@ -38,6 +45,9 @@ class UserTest extends TestCase
     /*
     * @test
     */
+
+    
+
     public function test_check_if_user_insert_into_db(): void
     {
         $userResponse = [
@@ -53,18 +63,18 @@ class UserTest extends TestCase
     */
     public function test_check_if_users_getting_fetched_with_id(): void
     {
-        $response = DB::table("users")->find(3);
+        $response = DB::table("users")->find(1);
         // $response = User::find(3);
         // dd($response);
         // dd($response->id);
         //Adott mező értékének ellenőrzése
-        $this->assertEquals(3, $response->id);
+        $this->assertEquals(1, $response->id);
 
         //A rekordok számának ellenőrzése
         $response = DB::table("users")->get();
 
         // dd($response);
-        $this->assertCount(2, $response);
+        $this->assertCount(1, $response);
 
         //A rekordok száma > mint 0
         $this->assertGreaterThan(0, count($response));

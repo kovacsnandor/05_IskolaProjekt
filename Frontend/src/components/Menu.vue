@@ -40,6 +40,11 @@
                 >
               </li>
               <li>
+                <RouterLink class="dropdown-item" to="/iskolanevsor"
+                  >Iskolanévsor</RouterLink
+                >
+              </li>
+              <li>
                 <RouterLink class="dropdown-item" to="/diakkeres"
                   >Tanuló keresés</RouterLink
                 >

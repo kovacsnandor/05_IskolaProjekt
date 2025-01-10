@@ -13,6 +13,14 @@ use Tests\TestCase;
 class ExampleTest extends TestCase
 {
 
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        // Adatbázis migrációk futtatása (ha szükséges)
+        // $this->artisan('migrate');
+    }
+
     /**
      * A basic test example.
      */

@@ -1,21 +1,19 @@
 <script>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from "vue-router";
+import Menu from "@/components/Menu.vue";
+
 export default {
-
-}
-
+  components: {
+    Menu,
+  },
+};
 </script>
 
 <template>
   <div class="container-fluid my-border my-container">
+    <h1>Iskola</h1>
 
-    <h1>CRUD műveletek</h1>
-    
-    <nav class="my-border p-4">
-      <RouterLink to="/">Home</RouterLink> | 
-      <RouterLink to="/personstable">Persons</RouterLink> |
-      <RouterLink to="/professionstable">Professions</RouterLink> |
-    </nav>
+    <Menu />
     
     <div class="my-border p-2">
       <RouterView />
@@ -24,7 +22,6 @@ export default {
 </template>
 
 <style scoped>
-
 </style>
 
 

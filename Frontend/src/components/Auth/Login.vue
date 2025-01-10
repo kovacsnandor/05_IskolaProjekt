@@ -72,7 +72,7 @@ export default {
       try {
         
         const response = await axios.post(url, this.user, headers);
-        this.store.id = response.data.data.id;
+        this.store.setId(response.data.data.id);
         this.store.setUser(response.data.data.name);
         this.store.setToken(response.data.data.token);
         this.errorMessage = "Sikeres bejelentkezés"

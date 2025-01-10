@@ -43,6 +43,33 @@ class QeriesController extends Controller
         return response()->json($data, options: JSON_UNESCAPED_UNICODE);
     }
 
+    public function queryOsztalynevsorokObj()
+    {
+        //natív SQL
+        $query =
+            "SELECT o.osztalyNev, GROUP_CONCAT(nev SEPARATOR ', ') AS nevek  FROM diaks d
+                INNER JOIN osztalies o ON d.osztalyId = o.id
+                GROUP BY osztalyNev";
+        $rows =  DB::select($query);
+        
+        $rows = array_map(function ($tanulo) {
+            $nevek = explode(', ', $tanulo->nevek);
+            sort($nevek); // Rendezés ABC sorrendben
+            return [
+                'osztalyNev' => $tanulo->osztalyNev,
+                'nevek' => $nevek,
+            ];
+        }, $rows);
+
+        $data = [
+            'message' => 'ok',
+            'data' => $rows
+        ];
+
+        return response()->json($data, options: JSON_UNESCAPED_UNICODE);
+    }
+
+
     public function queryOsztalynevsorLimit(int $oldal, int $limit){
         $offset = ($oldal - 1) *$limit;
 
@@ -109,21 +136,20 @@ class QeriesController extends Controller
 
 
         //sql injection
+       
         // $query = '
-        //     SELECT id, osztalyId, nev,neme,szuletett,helyseg, osztondij, atlag from diaks 
-        //     WHERE nev = "'.$nev.'" union select * from users#"';
+        //     SELECT d.id, osztalyId, nev, neme, szuletett, helyseg, osztondij, atlag, osztalynev from diaks d
+        //         INNER JOIN osztalies o ON d.osztalyId = o.id
+        //         WHERE nev = "'.$nev.'"';
         // $rows= DB::select($query);
+
+        
         $query = '
-            SELECT * from diaks 
-            WHERE nev = "'.$nev.'"';
-        $rows= DB::select($query);
+            SELECT d.id, osztalyId, nev, neme, szuletett, helyseg, osztondij, atlag, osztalynev from diaks d
+                INNER JOIN osztalies o ON d.osztalyId = o.id
+                WHERE nev = ?';
 
-        //no sql sinjection
-        // $query = '
-        //     SELECT id, osztalyId, nev,neme,szuletett,helyseg, osztondij, atlag from diaks 
-        //     WHERE nev = ?';
-
-        // $rows= DB::select($query, [$nev]);
+        $rows= DB::select($query, [$nev]);
         $data = [
             'message' => 'ok',
             'data' => $rows,

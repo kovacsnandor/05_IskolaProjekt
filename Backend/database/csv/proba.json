@@ -30,7 +30,9 @@
             },
             {
                 "osztalyNev": "1.b",
-                "tanulok": [{ "nev": "Zolika" }, { "nev": "Géza" }]
+                "tanulok": [
+                    { "nev": "Zolika" }, 
+                    { "nev": "Géza" }]
             }
         ]
     }

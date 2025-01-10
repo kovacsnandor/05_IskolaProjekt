@@ -360,9 +360,10 @@ Route::apiResource('diaks', DiakController::class);
 
 # Teszt adatok
 
-A külső táblákat érdemes teszt adatokkal feltölteni
+A táblákat érdemes teszt adatokkal feltölteni
 
-## Például sport tábla feltöltése
+## Adatok generálása tömbből
+Például sport tábla feltöltése
 
 1. **database/seeders/SportSeeder.php**
 
@@ -386,7 +387,7 @@ public function run(): void
     }
 }
 ```
-
+## Adatok generálása csv fájlból
 csv fájlból is beolvashatunk (Ez egy osztály beolvasása):
 
 ```csv
@@ -400,6 +401,7 @@ csv fájlból is beolvashatunk (Ez egy osztály beolvasása):
 8;2.d
 ```
 
+**database/seeders/SportSeeder.php**
 ```php
 public function run(): void
 {
@@ -424,16 +426,128 @@ public function run(): void
 }
 ```
 
+## Véletlen teszt adatok generálás
+Egy tesztgeneráló composer csomag: [Fakerphp](https://fakerphp.org/)
+A legjobb módszer Teszt adatbázis létrehozására.
+1. Factory osztályokban (**database/factories** mappa) definiáljuk a véletlen módszereket.
+    - A véletlen adatgenerálást
+        - fake() függvényekkel vagy 
+        - faker-el hozhatjuk létre
+**database/factories/DiakFactory.php**
+```php
+public function definition(): array
+{
+    //Faker objektum létrehozás adott nyelven
+    $faker = Faker::create('hu_HU');
+
+    //Dátum generálás
+    $minDate = '2010-01-01';
+    $maxDate = '2015-12-31';
+    $randomDate = fake()->date('Y-m-d', $maxDate);
+
+    // Ha a generált dátum kisebb, mint a minimális dátum, akkor újra generálunk
+    while ($randomDate < $minDate) {
+        $randomDate = fake()->date('Y-m-d', $maxDate);
+    }
+
+    //Neme generálás
+    $neme = fake()->boolean;
+    
+    //Megfelelő nemű név generálása Faker-el
+    if ($neme) {
+        //férfi
+        $nev =$faker->lastName(). " ". $faker->firstNameMale();
+    } else {
+        //nő
+        $nev =$faker->lastName(). " ". $faker->firstNameFemale();
+    }
+    
+    //Véletlen oszályId kiolvasása az ostalies táblából
+    $osztalyId = Osztaly::inRandomOrder()->first()->id;
+
+    return [
+        'nev' => $nev,
+        'neme' => $neme,
+        'osztalyId' => $osztalyId,
+        'szuletett' => $randomDate,
+        // 'helyseg' => VeletlenClass::randomVaros(),
+        'helyseg' =>  $faker->city(),
+        'osztondij' => fake()->numberBetween(5000, 7000),
+        'atlag' => fake()->randomFloat(1, 1, 5)
+    ];
+}
+
+```
+
+**database/factories/SportolasFactory.php**
+```php
+public function definition(): array
+{
+    //Az összetett kulcsnak együtt kell egyedinek lenni
+    //Olyan diák és sport párt keresünk, ami még nem volt
+    do {
+        $diakokId = Diak::inRandomOrder()->first()->id;
+        $sportokId = Sport::inRandomOrder()->first()->id;
+    } while (Sportolas::where('diakokId', $diakokId)->where('sportokId', $sportokId)->exists());
+
+
+    return [
+        'diakokId' => $diakokId,
+        'sportokId' => $sportokId,
+    ];
+}
+```
+**database/factories/SportolasFactory.php**
+```php
+class UserFactory extends Factory
+{
+    // A változó sztring, de lehet null
+    protected static ?string $password;
+
+    public function definition(): array
+    {
+        return [
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'email_verified_at' => now(),
+            //Ha üres a $password statikus változó, akkor belegenerálódik egy Has-elt jelszó
+            'password' => static::$password ??= Hash::make('password'),
+            'remember_token' => Str::random(10),
+        ];
+    }
+
+    /**
+     * Indicate that the model's email address should be unverified.
+     */
+    public function unverified(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email_verified_at' => null,
+        ]);
+    }
+}
+```
+
+
+
+
+
+## A táblák Seedereinek egybefoglalása
+A `php artisan db:seed` paranccsal a **database/seeders/DatabaseSeeder.php** run() metódusa fut le.
+Ide teszük be megfelelő sorrendbe a seeder osztályainkat
 2. **database/seeders/DatabaseSeeder.php**
 
 ```php
 public function run(): void
 {
+    //A táblák törlése
     DB::statement('DELETE FROM sportolas');
     DB::statement('DELETE FROM diaks');
     DB::statement('DELETE FROM osztalies');
     DB::statement('DELETE FROM sports');
 
+    //A táblák seeder osztályi run() metódusainak futtatása call paranccsal
+    //Elég megadni az osztályt, lefut a run() metódus
     $this->call([
         UserSeeder::class,
         SportSeeder::class,
@@ -445,7 +559,9 @@ public function run(): void
 }
 ```
 
+## Seederek futtatása
 3. seederek futtatása: `php artisan db:seed`
+
 
 
 # Hitelesítés
@@ -773,3 +889,12 @@ return [
     'supports_credentials' => false,
 ];    
 ```
+
+# Helper fájlok
+Elhelyezés: app/Helpers mappában.
+Használat: A helpers.php fájlban definiált függvényeket bárhonnan meghívhatod az alkalmazásban.
+Regisztrálás: A config/app.php fájlban az aliases tömbben kell regisztrálni a helper fájlt.
+
+
+# $phpFaker
+[phpFaker](https://fakerphp.org/locales/hu_HU/#fakerproviderhu_huaddress)

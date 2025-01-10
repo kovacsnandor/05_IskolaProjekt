@@ -34,6 +34,7 @@ class UserTest extends TestCase
     public function test_login()
     {
 
+        //Csinálok egy user-t
         $name = 'test99';
         $email = 'test99@example.com';
         $password = '123';
@@ -44,6 +45,7 @@ class UserTest extends TestCase
             'password' => $password,
         ]);
 
+        //Loginolok a user-el
         $response = $this
             ->withHeaders([
                 'Accept' => 'application/json',
@@ -54,8 +56,11 @@ class UserTest extends TestCase
                 'password' => $password
             ]);
 
+        //Lekérdezem, hogy a válasz státusza 200-e    
         $response->assertStatus(200);
+        //Kiolvasom a válaszból a tokent
         $token = $response->json('data')['token'];
+        //Ha van token, az jó
         $this->assertNotNull($token);
 
 

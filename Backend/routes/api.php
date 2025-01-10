@@ -24,8 +24,8 @@ Route::get('users', [UsersController::class, 'index'])
 
 Route::get('users/{id}', [UsersController::class, 'show'])
     ->middleware('auth:sanctum');
-Route::post('users', [UsersController::class, 'store'])
-    ->middleware('auth:sanctum');    
+Route::post('users', [UsersController::class, 'store']);
+       
 Route::patch('users/{id}', [UsersController::class, 'update'])
     ->middleware('auth:sanctum');    
 Route::delete('users/{id}', [UsersController::class, 'destroy'])
@@ -89,6 +89,7 @@ Route::delete('sportolas/{diakokId}/{sportokId}', [SportolasController::class, '
 
 //queries
 Route::get('queryOsztalynevsorok', [QeriesController::class, 'queryOsztalynevsorok']);
+Route::get('queryOsztalynevsorokObj', [QeriesController::class, 'queryOsztalynevsorokObj']);
 Route::get('/queryOsztalytasrsak/{nev}', [QeriesController::class, 'queryOsztalytasrsak']);
 Route::get('/queryOsztalynevsorLimit/{oldal}/{limit}', [QeriesController::class, 'queryOsztalynevsorLimit']);
 Route::get('/queryHanyOldalVan/{limit}', [QeriesController::class, 'queryHanyOldalVan']);
