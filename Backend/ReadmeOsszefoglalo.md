@@ -146,6 +146,68 @@ public function up(): void
     -   Az összes eddigi tábla törlése és a migrációk újrafuttatása: `php artisan migrate:refresh`
 -   Migrációk lekérdezése: `php artisan migrate:status`
 
+
+
+### Diákok tábla módosítása (migrációval)
+1. **új mező** utólag (hozzárakunk egy akarmi nevű string mezőt)
+Hozzunk létre egy új migrációs fájlt: php artisan `php artisan make:migration add_akarmi_to_diakok --table=diakok`
+- Létrejön az új migrációs fájl: **2024_11_17_155401_add_akarmi_to_diakok.php**
+- Figyeljük meg, hogy most az up metódusban **create** helyett **table** van!
+```php
+public function up(): void
+{
+    Schema::table('diakok', function (Blueprint $table) {
+        $table->string('akarmi', 50)->nullable(true);
+    });
+}
+```
+- Migráljunk: - `php artisan migrate`
+
+2. **mező átnevezés**
+- Átnevezés: **akarmi** -> **akarmiUj** névre
+- Új migrációs fájl: `php artisan make:migration rename_akarmi_to_diakok --table=diakok`
+- Új fájl: **2024_11_17_160536_rename_akarmi_to_diakok.php**
+```php
+    public function up(): void
+    {
+        Schema::table('diakok', function (Blueprint $table) {
+            $table->renameColumn('akarmi', 'akarmiUj');
+        });
+    }
+```
+- Migráljunk: - `php artisan migrate`
+
+3. mező **tulajdonság megváltoztatása**
+- Mezőhossz: **akarmi** 50 -> 75
+- Új migrációs fájl: `php artisan make:migration resize_akarmi_to_diakok --table=diakok`
+- Új fájl: **2024_11_17_160536_resize_akarmi_to_diakok.php**
+```php
+    public function up(): void
+    {
+        Schema::table('diakok', function (Blueprint $table) {
+            $table->string('akarmiUj', 75)->change();
+        });
+    }
+```
+- Migráljunk: - `php artisan migrate`
+
+4. mező törlése
+- Mező törlése: **akarmi**
+- Új migrációs fájl: `php artisan make:migration delete_akarmi_to_diakok --table=diakok`
+- Új fájl: **2024_11_17_160536_resize_akarmi_to_diakok.php**
+```php
+    public function up(): void
+    {
+        Schema::table('diakok', function (Blueprint $table) {
+            $table->dropColumn('akarmiUj');
+        });
+    }
+```
+- Migráljunk: - `php artisan migrate`
+
+
+
+
 ## Model konfigurálás
 
 Helye: **app\Models\Sport.php**
